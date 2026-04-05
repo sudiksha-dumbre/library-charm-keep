@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getMembers, getIssuedBooks, addMember, issueBook, returnBook, type Member, type IssuedBook } from "@/lib/members";
+import { addTransaction } from "@/lib/transactions";
 import { getBooks } from "@/lib/books";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
