@@ -54,13 +54,6 @@ const Login = () => {
               <Button type="submit" className="w-full">Sign In</Button>
             </form>
 
-            <div className="mt-6 rounded-lg border border-border bg-muted p-4">
-              <p className="mb-2 text-sm font-medium text-foreground">Demo Accounts</p>
-              <div className="space-y-1 text-sm text-muted-foreground">
-                <p><strong>Admin:</strong> admin@library.com / admin123</p>
-                <p><strong>Librarian:</strong> librarian@library.com / lib123</p>
-              </div>
-            </div>
           </CardContent>
         </Card>
       </div>
