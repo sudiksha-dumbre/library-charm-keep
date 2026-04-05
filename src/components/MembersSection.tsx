@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getMembers, getIssuedBooks, addMember, issueBook, returnBook, type Member, type IssuedBook } from "@/lib/members";
+import { addTransaction } from "@/lib/transactions";
 import { getBooks } from "@/lib/books";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -43,8 +44,10 @@ const MembersSection = () => {
   const handleIssue = (e: React.FormEvent) => {
     e.preventDefault();
     const book = books.find((b) => b.id === issueForm.bookId);
+    const member = members.find((m) => m.id === issueForm.memberId);
     if (!book) return;
     issueBook({ ...issueForm, bookTitle: book.title });
+    addTransaction({ type: "book_issued", description: `Book issued to ${member?.name ?? "Unknown"}`, bookTitle: book.title, memberName: member?.name });
     toast.success("Book issued");
     setIssueForm({ memberId: "", bookId: "", bookTitle: "", issuedDate: new Date().toISOString().split("T")[0], dueDate: "" });
     setIssueOpen(false);
@@ -52,7 +55,10 @@ const MembersSection = () => {
   };
 
   const handleReturn = (id: string) => {
+    const item = issued.find((i) => i.id === id);
+    const member = members.find((m) => m.id === item?.memberId);
     returnBook(id);
+    if (item) addTransaction({ type: "book_returned", description: `Book returned by ${member?.name ?? "Unknown"}`, bookTitle: item.bookTitle, memberName: member?.name });
     toast.success("Book returned");
     refresh();
   };

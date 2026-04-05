@@ -10,10 +10,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, Plus, Search, LogOut, Pencil, Trash2, Library, Users, BookCopy } from "lucide-react";
+import { BookOpen, Plus, Search, LogOut, Pencil, Trash2, Library, Users, BookCopy, ArrowRightLeft } from "lucide-react";
 import MembersSection from "@/components/MembersSection";
+import TransactionsSection from "@/components/TransactionsSection";
+import { addTransaction } from "@/lib/transactions";
 import { toast } from "sonner";
 
+const TAB_KEY = "library_active_tab";
 const emptyForm = { title: "", author: "", isbn: "", genre: "", year: new Date().getFullYear(), copies: 1, available: 1 };
 
 const Dashboard = () => {
@@ -21,6 +24,7 @@ const Dashboard = () => {
   const user = getCurrentUser();
   const [books, setBooks] = useState<Book[]>([]);
   const [search, setSearch] = useState("");
+  const [activeTab, setActiveTab] = useState(() => localStorage.getItem(TAB_KEY) || "books");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [form, setForm] = useState(emptyForm);
@@ -40,9 +44,11 @@ const Dashboard = () => {
     e.preventDefault();
     if (editingBook) {
       updateBook(editingBook.id, form);
+      addTransaction({ type: "book_updated", description: `Updated book details`, bookTitle: form.title });
       toast.success("Book updated successfully");
     } else {
       addBook(form);
+      addTransaction({ type: "book_added", description: `New book added to collection`, bookTitle: form.title });
       toast.success("Book added successfully");
     }
     setBooks(getBooks());
@@ -58,9 +64,16 @@ const Dashboard = () => {
   };
 
   const handleDelete = (id: string) => {
+    const book = books.find((b) => b.id === id);
     deleteBook(id);
+    if (book) addTransaction({ type: "book_deleted", description: `Book removed from collection`, bookTitle: book.title });
     setBooks(getBooks());
     toast.success("Book deleted");
+  };
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    localStorage.setItem(TAB_KEY, value);
   };
 
   const handleLogout = () => {
@@ -132,10 +145,11 @@ const Dashboard = () => {
         </div>
 
         {/* Main Tabs */}
-        <Tabs defaultValue="books">
+        <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList>
             <TabsTrigger value="books">Books</TabsTrigger>
             <TabsTrigger value="members">Members & Issues</TabsTrigger>
+            <TabsTrigger value="transactions">Transactions</TabsTrigger>
           </TabsList>
 
           <TabsContent value="books" className="space-y-6">
@@ -220,6 +234,10 @@ const Dashboard = () => {
 
           <TabsContent value="members">
             <MembersSection />
+          </TabsContent>
+
+          <TabsContent value="transactions">
+            <TransactionsSection />
           </TabsContent>
         </Tabs>
       </main>
