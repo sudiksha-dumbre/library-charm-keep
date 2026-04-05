@@ -144,10 +144,11 @@ const Dashboard = () => {
         </div>
 
         {/* Main Tabs */}
-        <Tabs defaultValue="books">
+        <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList>
             <TabsTrigger value="books">Books</TabsTrigger>
             <TabsTrigger value="members">Members & Issues</TabsTrigger>
+            <TabsTrigger value="transactions">Transactions</TabsTrigger>
           </TabsList>
 
           <TabsContent value="books" className="space-y-6">
