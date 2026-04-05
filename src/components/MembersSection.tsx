@@ -55,7 +55,10 @@ const MembersSection = () => {
   };
 
   const handleReturn = (id: string) => {
+    const item = issued.find((i) => i.id === id);
+    const member = members.find((m) => m.id === item?.memberId);
     returnBook(id);
+    if (item) addTransaction({ type: "book_returned", description: `Book returned by ${member?.name ?? "Unknown"}`, bookTitle: item.bookTitle, memberName: member?.name });
     toast.success("Book returned");
     refresh();
   };
