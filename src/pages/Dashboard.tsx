@@ -9,7 +9,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookOpen, Plus, Search, LogOut, Pencil, Trash2, Library, Users, BookCopy } from "lucide-react";
+import MembersSection from "@/components/MembersSection";
 import { toast } from "sonner";
 
 const emptyForm = { title: "", author: "", isbn: "", genre: "", year: new Date().getFullYear(), copies: 1, available: 1 };
