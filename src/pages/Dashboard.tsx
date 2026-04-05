@@ -10,10 +10,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, Plus, Search, LogOut, Pencil, Trash2, Library, Users, BookCopy } from "lucide-react";
+import { BookOpen, Plus, Search, LogOut, Pencil, Trash2, Library, Users, BookCopy, ArrowRightLeft } from "lucide-react";
 import MembersSection from "@/components/MembersSection";
+import TransactionsSection from "@/components/TransactionsSection";
+import { addTransaction } from "@/lib/transactions";
 import { toast } from "sonner";
 
+const TAB_KEY = "library_active_tab";
 const emptyForm = { title: "", author: "", isbn: "", genre: "", year: new Date().getFullYear(), copies: 1, available: 1 };
 
 const Dashboard = () => {
