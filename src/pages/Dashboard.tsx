@@ -24,6 +24,7 @@ const Dashboard = () => {
   const user = getCurrentUser();
   const [books, setBooks] = useState<Book[]>([]);
   const [search, setSearch] = useState("");
+  const [activeTab, setActiveTab] = useState(() => localStorage.getItem(TAB_KEY) || "books");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [form, setForm] = useState(emptyForm);
