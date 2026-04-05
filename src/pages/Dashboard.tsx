@@ -43,9 +43,11 @@ const Dashboard = () => {
     e.preventDefault();
     if (editingBook) {
       updateBook(editingBook.id, form);
+      addTransaction({ type: "book_updated", description: `Updated book details`, bookTitle: form.title });
       toast.success("Book updated successfully");
     } else {
       addBook(form);
+      addTransaction({ type: "book_added", description: `New book added to collection`, bookTitle: form.title });
       toast.success("Book added successfully");
     }
     setBooks(getBooks());
