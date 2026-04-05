@@ -234,6 +234,10 @@ const Dashboard = () => {
           <TabsContent value="members">
             <MembersSection />
           </TabsContent>
+
+          <TabsContent value="transactions">
+            <TransactionsSection />
+          </TabsContent>
         </Tabs>
       </main>
     </div>
