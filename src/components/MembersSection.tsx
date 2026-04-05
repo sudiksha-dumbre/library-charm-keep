@@ -44,8 +44,10 @@ const MembersSection = () => {
   const handleIssue = (e: React.FormEvent) => {
     e.preventDefault();
     const book = books.find((b) => b.id === issueForm.bookId);
+    const member = members.find((m) => m.id === issueForm.memberId);
     if (!book) return;
     issueBook({ ...issueForm, bookTitle: book.title });
+    addTransaction({ type: "book_issued", description: `Book issued to ${member?.name ?? "Unknown"}`, bookTitle: book.title, memberName: member?.name });
     toast.success("Book issued");
     setIssueForm({ memberId: "", bookId: "", bookTitle: "", issuedDate: new Date().toISOString().split("T")[0], dueDate: "" });
     setIssueOpen(false);
