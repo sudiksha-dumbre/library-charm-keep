@@ -131,118 +131,97 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* Toolbar */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative max-w-sm flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input placeholder="Search books..." className="pl-9" value={search} onChange={(e) => setSearch(e.target.value)} />
-          </div>
-          <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) { setEditingBook(null); setForm(emptyForm); } }}>
-            <DialogTrigger asChild>
-              <Button><Plus className="mr-2 h-4 w-4" /> Add Book</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-lg">
-              <DialogHeader>
-                <DialogTitle className="font-heading">{editingBook ? "Edit Book" : "Add New Book"}</DialogTitle>
-              </DialogHeader>
-              <form onSubmit={handleSubmit} className="grid gap-4 pt-2">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label>Title</Label>
-                    <Input required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Author</Label>
-                    <Input required value={form.author} onChange={(e) => setForm({ ...form, author: e.target.value })} />
-                  </div>
-                </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label>ISBN</Label>
-                    <Input required value={form.isbn} onChange={(e) => setForm({ ...form, isbn: e.target.value })} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Genre</Label>
-                    <Input required value={form.genre} onChange={(e) => setForm({ ...form, genre: e.target.value })} />
-                  </div>
-                </div>
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <div className="space-y-2">
-                    <Label>Year</Label>
-                    <Input type="number" required value={form.year} onChange={(e) => setForm({ ...form, year: Number(e.target.value) })} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Total Copies</Label>
-                    <Input type="number" min={1} required value={form.copies} onChange={(e) => setForm({ ...form, copies: Number(e.target.value) })} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Available</Label>
-                    <Input type="number" min={0} required value={form.available} onChange={(e) => setForm({ ...form, available: Number(e.target.value) })} />
-                  </div>
-                </div>
-                <Button type="submit" className="mt-2">{editingBook ? "Update Book" : "Add Book"}</Button>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </div>
+        {/* Main Tabs */}
+        <Tabs defaultValue="books">
+          <TabsList>
+            <TabsTrigger value="books">Books</TabsTrigger>
+            <TabsTrigger value="members">Members & Issues</TabsTrigger>
+          </TabsList>
 
-        {/* Table */}
-        <Card className="animate-fade-in">
-          <CardHeader>
-            <CardTitle className="font-heading">Book Collection</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Title</TableHead>
-                    <TableHead>Author</TableHead>
-                    <TableHead className="hidden md:table-cell">ISBN</TableHead>
-                    <TableHead className="hidden sm:table-cell">Genre</TableHead>
-                    <TableHead className="hidden sm:table-cell">Year</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filtered.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">No books found</TableCell>
-                    </TableRow>
-                  ) : filtered.map((book) => (
-                    <TableRow key={book.id}>
-                      <TableCell className="font-medium">{book.title}</TableCell>
-                      <TableCell>{book.author}</TableCell>
-                      <TableCell className="hidden md:table-cell font-mono text-xs">{book.isbn}</TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        <Badge variant="secondary">{book.genre}</Badge>
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">{book.year}</TableCell>
-                      <TableCell>
-                        <Badge variant={book.available > 0 ? "default" : "destructive"}>
-                          {book.available}/{book.copies}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-1">
-                          <Button variant="ghost" size="icon" onClick={() => handleEdit(book)}>
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          {user?.role === "admin" && (
-                            <Button variant="ghost" size="icon" onClick={() => handleDelete(book.id)}>
-                              <Trash2 className="h-4 w-4 text-destructive" />
-                            </Button>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+          <TabsContent value="books" className="space-y-6">
+            {/* Toolbar */}
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="relative max-w-sm flex-1">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input placeholder="Search books..." className="pl-9" value={search} onChange={(e) => setSearch(e.target.value)} />
+              </div>
+              <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) { setEditingBook(null); setForm(emptyForm); } }}>
+                <DialogTrigger asChild>
+                  <Button><Plus className="mr-2 h-4 w-4" /> Add Book</Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-lg">
+                  <DialogHeader>
+                    <DialogTitle className="font-heading">{editingBook ? "Edit Book" : "Add New Book"}</DialogTitle>
+                  </DialogHeader>
+                  <form onSubmit={handleSubmit} className="grid gap-4 pt-2">
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="space-y-2"><Label>Title</Label><Input required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} /></div>
+                      <div className="space-y-2"><Label>Author</Label><Input required value={form.author} onChange={(e) => setForm({ ...form, author: e.target.value })} /></div>
+                    </div>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="space-y-2"><Label>ISBN</Label><Input required value={form.isbn} onChange={(e) => setForm({ ...form, isbn: e.target.value })} /></div>
+                      <div className="space-y-2"><Label>Genre</Label><Input required value={form.genre} onChange={(e) => setForm({ ...form, genre: e.target.value })} /></div>
+                    </div>
+                    <div className="grid gap-4 sm:grid-cols-3">
+                      <div className="space-y-2"><Label>Year</Label><Input type="number" required value={form.year} onChange={(e) => setForm({ ...form, year: Number(e.target.value) })} /></div>
+                      <div className="space-y-2"><Label>Total Copies</Label><Input type="number" min={1} required value={form.copies} onChange={(e) => setForm({ ...form, copies: Number(e.target.value) })} /></div>
+                      <div className="space-y-2"><Label>Available</Label><Input type="number" min={0} required value={form.available} onChange={(e) => setForm({ ...form, available: Number(e.target.value) })} /></div>
+                    </div>
+                    <Button type="submit" className="mt-2">{editingBook ? "Update Book" : "Add Book"}</Button>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </div>
-          </CardContent>
-        </Card>
+
+            {/* Table */}
+            <Card className="animate-fade-in">
+              <CardHeader><CardTitle className="font-heading">Book Collection</CardTitle></CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Title</TableHead>
+                        <TableHead>Author</TableHead>
+                        <TableHead className="hidden md:table-cell">ISBN</TableHead>
+                        <TableHead className="hidden sm:table-cell">Genre</TableHead>
+                        <TableHead className="hidden sm:table-cell">Year</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filtered.length === 0 ? (
+                        <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">No books found</TableCell></TableRow>
+                      ) : filtered.map((book) => (
+                        <TableRow key={book.id}>
+                          <TableCell className="font-medium">{book.title}</TableCell>
+                          <TableCell>{book.author}</TableCell>
+                          <TableCell className="hidden md:table-cell font-mono text-xs">{book.isbn}</TableCell>
+                          <TableCell className="hidden sm:table-cell"><Badge variant="secondary">{book.genre}</Badge></TableCell>
+                          <TableCell className="hidden sm:table-cell">{book.year}</TableCell>
+                          <TableCell><Badge variant={book.available > 0 ? "default" : "destructive"}>{book.available}/{book.copies}</Badge></TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end gap-1">
+                              <Button variant="ghost" size="icon" onClick={() => handleEdit(book)}><Pencil className="h-4 w-4" /></Button>
+                              {user?.role === "admin" && (
+                                <Button variant="ghost" size="icon" onClick={() => handleDelete(book.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="members">
+            <MembersSection />
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
