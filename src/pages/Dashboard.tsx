@@ -63,9 +63,16 @@ const Dashboard = () => {
   };
 
   const handleDelete = (id: string) => {
+    const book = books.find((b) => b.id === id);
     deleteBook(id);
+    if (book) addTransaction({ type: "book_deleted", description: `Book removed from collection`, bookTitle: book.title });
     setBooks(getBooks());
     toast.success("Book deleted");
+  };
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    localStorage.setItem(TAB_KEY, value);
   };
 
   const handleLogout = () => {
